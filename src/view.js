@@ -1,8 +1,17 @@
-import onChange from 'on-change';
-import validation from './validation.js';
+// import onChange from 'on-change';
 
-validation();
+// const state = {
+//   // eslint-disable-next-line no-undef
+//   currentUrlValidation: false,
+//   feeds: [],
+//   posts: [],
+// };
 
-const watchedState = onChange(state, (path, value) => {
-  
-});
+// const watchedState = onChange(state, (path, value) => {
+//   switch (path) {
+//     case 'currentUrlValidation': 
+//       break;
+//     default:
+//       break;
+//   }
+// });
