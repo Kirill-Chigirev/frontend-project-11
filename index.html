@@ -6,6 +6,48 @@
     <title>RSS агрегатор</title>
   </head>
   <body>
+    <div
+      class="modal fade"
+      id="modal"
+      tabindex="-1"
+      aria-labelledby="modal"
+      style="display: none"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Lorem ipsum 2025-03-01T15:08:00Z</h5>
+            <button
+              type="button"
+              class="btn-close close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-break">
+            Tempor elit mollit anim labore magna amet dolore qui in cillum amet
+            ea anim exercitation.
+          </div>
+          <div class="modal-footer">
+            <a
+              class="btn btn-primary full-article"
+              href="http://example.com/test/1740841680"
+              role="button"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Читать полностью </a
+            ><button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Закрыть
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <main class="flex-grow-1">
       <section class="container-fluid bg-dark p-5">
         <div class="row">
@@ -42,6 +84,7 @@
                 </div>
               </div>
             </form>
+            <p class="mt-2 mb-0 text-muted">Пример: https://lorem-rss.hexlet.app/feed</p>
             <p class="feedback m-0 position-absolute small text-danger"></p>
           </div>
         </div>
