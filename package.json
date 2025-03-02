@@ -34,6 +34,7 @@
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.3",
     "postcss-loader": "^8.1.1",
+    "prettier": "^3.5.2",
     "sass": "^1.85.1",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
@@ -44,8 +45,10 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "axios": "^1.8.1",
     "bootstrap": "^5.3.3",
     "i18next": "^24.2.2",
+    "lodash": "^4.17.21",
     "on-change": "^5.0.1",
     "yup": "^1.6.1"
   }
