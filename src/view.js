@@ -1,20 +1,8 @@
 /* eslint-disable no-param-reassign */
-const handleError = (elements, error, i18next) => {
+const handleError = (elements, initialState, i18next) => {
   elements.feedback.classList.add('text-danger');
   elements.feedback.classList.remove('text-success');
-  switch (error) {
-    case 'invalid':
-      elements.feedback.textContent = i18next.t('invalid');
-      break;
-    case 'exists':
-      elements.feedback.textContent = i18next.t('exists');
-      break;
-    case 'noRss':
-      elements.feedback.textContent = i18next.t('noRss');
-      break;
-    default:
-      break;
-  }
+  elements.feedback.textContent = i18next.t(initialState.error);
 };
 
 const handleProcessState = (elements, processState, i18next) => {
@@ -43,10 +31,9 @@ export default (elements, initialState, i18next) => (path, value) => {
       handleProcessState(elements, value, i18next);
       break;
     case 'error':
-      handleError(elements, value, i18next);
+      handleError(elements, initialState, i18next);
       break;
     default:
-      console.log(initialState);
       break;
   }
 };
