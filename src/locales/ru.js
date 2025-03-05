@@ -4,8 +4,10 @@ export default {
     invalid: 'Ссылка должна быть валидным URL',
     exists: 'RSS уже существует',
     noRSS: 'Ресурс не содержит валидный RSS',
-    posts: 'Посты',
-    feeds: 'Фиды',
-    view: 'просмотр',
+    networkError: 'Ошибка сети',
+    unknownError: 'Неизвестная ошибка. Что-то пошло не так.',
+    postsTitle: 'Посты',
+    feedsTitle: 'Фиды',
+    viewButton: 'просмотр',
   },
 };
