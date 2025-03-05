@@ -76,6 +76,8 @@ export default () => {
     viewedPosts: [],
   };
 
+  const modalFooter = document.querySelector('.modal-footer');
+
   const elements = {
     form: document.querySelector('form'),
     input: document.querySelector('#url-input'),
@@ -84,6 +86,7 @@ export default () => {
     feeds: document.querySelector('.feeds'),
     modalTitle: document.querySelector('.modal-title'),
     modalBody: document.querySelector('.modal-body'),
+    modalButton: modalFooter.querySelector('a'),
   };
 
   return i18next.init({
@@ -129,10 +132,9 @@ export default () => {
 
       elements.posts.addEventListener('click', ({ target }) => {
         if (target.dataset.id) {
-          const currentPost = state.posts.find(({ id }) => id === target.dataset.id);
-          state.viewedPosts = [target.dataset.id, ...state.viewedPosts];
-          elements.modalTitle.textContent = currentPost.title;
-          elements.modalBody.textContent = currentPost.description;
+          const filteredPosts = state.viewedPosts.filter((id) => id !== target.dataset.id);
+          state.viewedPosts = [...filteredPosts];
+          state.viewedPosts = [...state.viewedPosts, target.dataset.id];
         }
       });
     })

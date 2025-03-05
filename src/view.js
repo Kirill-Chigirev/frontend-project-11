@@ -73,6 +73,11 @@ const renderPosts = (elements, initialState, i18next) => {
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     a.classList.add('fw-bold');
     if (initialState.viewedPosts.includes(post.id)) {
+      const postId = initialState.viewedPosts.at(-1);
+      const currentPost = initialState.posts.find(({ id }) => id === postId);
+      elements.modalTitle.textContent = currentPost.title;
+      elements.modalBody.textContent = currentPost.description;
+      elements.modalButton.setAttribute('href', currentPost.link);
       a.classList.remove('fw-bold');
       a.classList.add('fw-normal');
       a.classList.add('link-secondary');
