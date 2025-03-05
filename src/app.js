@@ -6,6 +6,7 @@ import axios from 'axios';
 import uniqueId from 'lodash/uniqueId.js';
 import ru from './locales/ru.js';
 import render from './view.js';
+import view from './view.js';
 
 const schema = yup.object({
   url: yup.string().required().url(),
@@ -54,7 +55,6 @@ const getRSS = (url, state) => axios.get(`https://allorigins.hexlet.app/get?disa
       result.posts.forEach((post) => {
         const oldPost = state.posts.find(({ title }) => title === post.title);
         if (!oldPost) {
-          console.log(post);
           newPosts.push(post);
         }
       });
@@ -73,6 +73,7 @@ export default () => {
     sources: [],
     feeds: [],
     posts: [],
+    viewedPosts: [],
   };
 
   const elements = {
@@ -129,6 +130,7 @@ export default () => {
       elements.posts.addEventListener('click', ({ target }) => {
         if (target.dataset.id) {
           const currentPost = state.posts.find(({ id }) => id === target.dataset.id);
+          state.viewedPosts = [target.dataset.id, ...state.viewedPosts];
           elements.modalTitle.textContent = currentPost.title;
           elements.modalBody.textContent = currentPost.description;
         }

@@ -72,6 +72,11 @@ const renderPosts = (elements, initialState, i18next) => {
     const button = document.createElement('button');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     a.classList.add('fw-bold');
+    if (initialState.viewedPosts.includes(post.id)) {
+      a.classList.remove('fw-bold');
+      a.classList.add('fw-normal');
+      a.classList.add('link-secondary');
+    }
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
     a.setAttribute('href', post.link);
@@ -103,6 +108,9 @@ export default (elements, initialState, i18next) => (path, value) => {
       renderFeeds(elements, initialState, i18next);
       break;
     case 'posts':
+      renderPosts(elements, initialState, i18next);
+      break;
+    case 'viewedPosts':
       renderPosts(elements, initialState, i18next);
       break;
     default:
