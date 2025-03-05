@@ -6,7 +6,6 @@ import axios from 'axios';
 import uniqueId from 'lodash/uniqueId.js';
 import ru from './locales/ru.js';
 import render from './view.js';
-import view from './view.js';
 
 const schema = yup.object({
   url: yup.string().required().url(),
