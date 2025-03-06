@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 const handleError = (elements, initialState, i18next) => {
   if (initialState.error !== '') {
     elements.feedback.classList.add('text-danger');
@@ -18,9 +17,14 @@ const handleProcessState = (elements, processState, i18next) => {
       elements.feedback.textContent = i18next.t('success');
       elements.input.value = '';
       elements.input.focus();
+      elements.button.removeAttribute('disabled', '');
       break;
     case 'error':
       elements.input.classList.add('is-invalid');
+      elements.button.removeAttribute('disabled', '');
+      break;
+    case 'request':
+      elements.button.setAttribute('disabled', '');
       break;
     default:
       break;

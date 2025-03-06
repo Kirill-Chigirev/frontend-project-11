@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import * as yup from 'yup';
 import onChange from 'on-change';
 import i18next from 'i18next';
@@ -61,13 +60,20 @@ const getRSS = (url, state) => axios.get(`https://allorigins.hexlet.app/get?disa
     }
   })
   .catch((e) => {
-    state.error = e.message === 'noRSS' ? 'noRSS' : 'networkError';
+    console.log(e);
+    if (e.message === 'noRSS') {
+      state.error = 'noRSS';
+    } else if (e.message === 'Network Error') {
+      state.error = 'networkError';
+    } else {
+      state.error = 'unknownError';
+    }
     state.process = 'error';
   });
 
 export default () => {
   const initialState = {
-    process: 'filling', // error, success
+    process: 'filling', // request, success, error
     error: '', // invalid, exists, noRSS, networkError, unknownError
     sources: [],
     feeds: [],
@@ -80,6 +86,7 @@ export default () => {
   const elements = {
     form: document.querySelector('form'),
     input: document.querySelector('#url-input'),
+    button: document.querySelector('[type="submit"]'),
     feedback: document.querySelector('.feedback'),
     posts: document.querySelector('.posts'),
     feeds: document.querySelector('.feeds'),
@@ -101,7 +108,7 @@ export default () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const url = formData.get('url');
-        const isExists = (currentUrl) => state.feeds.includes(currentUrl);
+        const isExists = (currentUrl) => state.sources.includes(currentUrl);
         validate(url)
           .then((result) => {
             if (!result.valid) {
@@ -115,6 +122,7 @@ export default () => {
           })
           .then(() => {
             getRSS(url, state);
+            state.process = 'request';
           })
           .catch(() => {
             state.process = 'error';
