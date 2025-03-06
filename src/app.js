@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import * as yup from 'yup';
 import onChange from 'on-change';
 import i18next from 'i18next';

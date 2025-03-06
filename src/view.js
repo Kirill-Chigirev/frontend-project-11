@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const handleError = (elements, initialState, i18next) => {
   if (initialState.error !== '') {
     elements.feedback.classList.add('text-danger');
