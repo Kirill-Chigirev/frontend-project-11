@@ -11,9 +11,7 @@ const schema = yup.object({
   url: yup.string().required().url(),
 });
 
-const validate = (url) => schema.validate({ url })
-  .then(() => ({ valid: true }))
-  .catch(() => ({ valid: false }));
+const validate = (url) => schema.validate({ url });
 
 const parseRSS = (rssContent) => {
   const parser = new DOMParser();
@@ -40,6 +38,13 @@ const parseRSS = (rssContent) => {
   return { feed, posts };
 };
 
+const errorMap = {
+  noRSS: 'noRSS',
+  'Network Error': 'networkError',
+  exists: 'exists',
+  'url must be a valid URL': 'invalid',
+};
+
 const getRSS = (url, state) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${url}`)
   .then((response) => parseRSS(response.data.contents))
   .then((result) => {
@@ -61,14 +66,7 @@ const getRSS = (url, state) => axios.get(`https://allorigins.hexlet.app/get?disa
     }
   })
   .catch((e) => {
-    console.log(e);
-    if (e.message === 'noRSS') {
-      state.error = 'noRSS';
-    } else if (e.message === 'Network Error') {
-      state.error = 'networkError';
-    } else {
-      state.error = 'unknownError';
-    }
+    state.error = errorMap[e.message] ? errorMap[e.message] : 'unknownError';
     state.process = 'error';
   });
 
@@ -80,9 +78,8 @@ export default () => {
     feeds: [],
     posts: [],
     viewedPosts: [],
+    currentPostId: '',
   };
-
-  const modalFooter = document.querySelector('.modal-footer');
 
   const elements = {
     form: document.querySelector('form'),
@@ -93,7 +90,7 @@ export default () => {
     feeds: document.querySelector('.feeds'),
     modalTitle: document.querySelector('.modal-title'),
     modalBody: document.querySelector('.modal-body'),
-    modalButton: modalFooter.querySelector('a'),
+    modalButton: document.querySelector('.modal-footer a'),
   };
 
   return i18next.init({
@@ -111,11 +108,7 @@ export default () => {
         const url = formData.get('url');
         const isExists = (currentUrl) => state.sources.includes(currentUrl);
         validate(url)
-          .then((result) => {
-            if (!result.valid) {
-              state.error = 'invalid';
-              throw new Error(i18next.t(state.error));
-            }
+          .then(() => {
             if (isExists(url)) {
               state.error = 'exists';
               throw new Error(i18next.t(state.error));
@@ -125,28 +118,29 @@ export default () => {
             getRSS(url, state);
             state.process = 'request';
           })
-          .catch(() => {
+          .catch((error) => {
+            state.error = errorMap[error.message];
             state.process = 'error';
           });
       });
 
+      const ms = 5000;
       const checkNewPosts = () => {
         state.sources.forEach((source) => {
           getRSS(source, state);
         });
-        setTimeout(checkNewPosts, 5000);
+        setTimeout(checkNewPosts, ms);
       };
-      setTimeout(checkNewPosts, 5000);
+      setTimeout(checkNewPosts, ms);
 
       elements.posts.addEventListener('click', ({ target }) => {
         if (target.dataset.id) {
           const filteredPosts = state.viewedPosts.filter((id) => id !== target.dataset.id);
-          state.viewedPosts = [...filteredPosts];
-          state.viewedPosts = [...state.viewedPosts, target.dataset.id];
+          state.viewedPosts = [...filteredPosts, target.dataset.id];
         }
       });
     })
     .catch((error) => {
-      console.log('initialization error:', error.message);
+      console.error('initialization error:', error.message);
     });
 };
