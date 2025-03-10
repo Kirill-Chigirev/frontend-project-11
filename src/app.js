@@ -45,30 +45,29 @@ const errorMap = {
   'url must be a valid URL': 'invalid',
 };
 
-const getRSS = (url, state) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${url}`)
-  .then((response) => parseRSS(response.data.contents))
-  .then((result) => {
-    if (!state.sources.includes(url)) {
-      state.error = '';
-      state.process = 'success';
-      state.sources = [url, ...state.sources];
-      state.feeds = [result.feed, ...state.feeds];
-      state.posts = [...result.posts, ...state.posts];
-    } else {
-      const newPosts = [];
-      result.posts.forEach((post) => {
-        const oldPost = state.posts.find(({ title }) => title === post.title);
-        if (!oldPost) {
-          newPosts.push(post);
-        }
+const getRSS = (url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${url}`);
+
+const ms = 5000;
+const checkNewPosts = (state) => {
+  state.sources.forEach((source) => {
+    getRSS(source)
+      .then((response) => parseRSS(response.data.contents))
+      .then((result) => {
+        const newPosts = [];
+        result.posts.forEach((post) => {
+          const oldPost = state.posts.find(({ title }) => title === post.title);
+          if (!oldPost) {
+            newPosts.push(post);
+          }
+        });
+        state.posts = [...newPosts, ...state.posts];
+      })
+      .catch((error) => {
+        console.error(error);
       });
-      state.posts = [...newPosts, ...state.posts];
-    }
-  })
-  .catch((e) => {
-    state.error = errorMap[e.message] ? errorMap[e.message] : 'unknownError';
-    state.process = 'error';
   });
+  setTimeout(checkNewPosts, ms, state);
+};
 
 export default () => {
   const initialState = {
@@ -78,7 +77,6 @@ export default () => {
     feeds: [],
     posts: [],
     viewedPosts: [],
-    currentPostId: '',
   };
 
   const elements = {
@@ -115,8 +113,20 @@ export default () => {
             }
           })
           .then(() => {
-            getRSS(url, state);
             state.process = 'request';
+            getRSS(url)
+              .then((response) => parseRSS(response.data.contents))
+              .then((result) => {
+                state.error = '';
+                state.process = 'success';
+                state.sources = [url, ...state.sources];
+                state.feeds = [result.feed, ...state.feeds];
+                state.posts = [...result.posts, ...state.posts];
+              })
+              .catch((error) => {
+                state.error = errorMap[error.message] ? errorMap[error.message] : 'unknownError';
+                state.process = 'error';
+              });
           })
           .catch((error) => {
             state.error = errorMap[error.message];
@@ -124,14 +134,7 @@ export default () => {
           });
       });
 
-      const ms = 5000;
-      const checkNewPosts = () => {
-        state.sources.forEach((source) => {
-          getRSS(source, state);
-        });
-        setTimeout(checkNewPosts, ms);
-      };
-      setTimeout(checkNewPosts, ms);
+      setTimeout(checkNewPosts, ms, state);
 
       elements.posts.addEventListener('click', ({ target }) => {
         if (target.dataset.id) {

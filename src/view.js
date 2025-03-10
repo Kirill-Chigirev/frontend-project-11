@@ -132,8 +132,6 @@ export default (elements, initialState, i18next) => (path, value) => {
       renderFeeds(elements, initialState, i18next);
       break;
     case 'posts':
-      renderPosts(elements, initialState, i18next);
-      break;
     case 'viewedPosts':
       renderPosts(elements, initialState, i18next);
       break;
